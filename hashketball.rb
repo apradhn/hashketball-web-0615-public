@@ -202,3 +202,53 @@ def big_shoe_rebounds
   end
   player_data[:rebounds]
 end
+
+def most_points_scored
+  most_points = 0
+  player_with_most_points = ""
+  game_hash.each do |team_key, team|
+    game_hash[team_key][:players].each do |stats|
+      if stats[:points] > most_points
+        most_points = stats[:points]
+        player_with_most_points = stats[:name]
+      end
+    end
+  end
+  player_with_most_points
+end
+
+def winning_team
+  home_points = game_hash[:home][:players].each_with_object([]){|data, arr| arr << data[:points]}.inject(0){|sum, points| sum + points}
+  away_points = game_hash[:away][:players].each_with_object([]){|data, arr| arr << data[:points]}.inject(0){|sum, points| sum + points}
+  if home_points > away_points
+    game_hash[:home][:team_name]
+  else
+    game_hash[:away][:team_name]
+  end
+end
+
+def player_with_longest_name
+  player_names = []
+  game_hash.each{|key, team| team[:players].each{|player| player_names << player[:name]}}
+  longest_name = ""
+  player_names.each do |player|
+    if player.length > longest_name.length
+      longest_name = player
+    end
+  end
+  longest_name
+end
+
+def long_name_steals_a_ton?
+  most_steals = 0
+  player_with_most_steals = ""
+  game_hash.each do |team_key, team|
+    game_hash[team_key][:players].each do |stats|
+      if stats[:steals] > most_steals
+        most_steals = stats[:steals]
+        player_with_most_steals = stats[:name]
+      end
+    end
+  end 
+  player_with_most_steals == player_with_longest_name
+end
